@@ -1,0 +1,137 @@
+{
+  "name": "AI_Text_Summarizer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4b6b8e12-ecb4-420c-ac5f-fda2e76a1df6",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "290dab80-2e15-474c-acbf-ca78ec7b7398",
+      "name": "Webhook",
+      "webhookId": "4b6b8e12-ecb4-420c-ac5f-fda2e76a1df6"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Summarize the following text into exactly 3 bullet points.\n\nIf the text contains action items or tasks, list them separately.\nIf there are no action items, write \"No action items found.\"\n\nText:\n{{$json.body.text}}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5c8ae266-9bec-4f4a-b6cb-71c598bd14b2",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    timestamp: new Date().toISOString(),\n    summary: $json.output[0].content[0].text\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "4afaad20-f399-4870-a32c-e6b73d81f4fe",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"timestamp\":\"2026-07-14T08:41:59.909Z\",\n  \"summary\":\"Summary...\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "b5865a32-e5a5-4ed6-b402-cc0848db4577",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
+  },
+  "versionId": "c8f3bda3-c7db-4e20-af53-b12bbc835f49",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c1e0d59a8cb0552594f28eafbd2ba743f833a7c5b2772cce53ac0c840fbafe8c"
+  },
+  "nodeGroups": [],
+  "id": "RuXgOJvIipbHREdQ",
+  "tags": []
+}

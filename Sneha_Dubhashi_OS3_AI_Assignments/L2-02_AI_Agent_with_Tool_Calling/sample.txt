@@ -1,0 +1,11 @@
+AI Agent with Tool Calling
+
+This is a sample text file used to demonstrate the File Lookup Tool.
+
+Features:
+- Calculator Tool
+- File Lookup Tool
+- Intent-based Tool Selection
+- Graceful Error Handling
+
+
